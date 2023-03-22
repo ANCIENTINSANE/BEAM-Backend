@@ -7,7 +7,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/hy", (req, res) => {
-  res.send("hello world 2");
+  res.send("hello world hy route");
 });
 
 if (process.env.ENV === "dev") {
