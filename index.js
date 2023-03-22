@@ -7,6 +7,6 @@ if (process.env.ENV === "dev") {
     console.log("http://localhost:10000");
   });
 }
-app.get("/", (res, req) => {
+app.get("/hy", (res, req) => {
   res.send("hello");
 });
