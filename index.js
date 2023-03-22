@@ -1,13 +1,20 @@
 const express = require("express");
+const { dbConnect } = require("./db/db-mongo");
 const app = express();
+const { getToDo } = require("./db/services/functions");
 require("dotenv").config();
 
-app.get("/", (req, res) => {
-  res.send("hello world");
+app.get("/", async (req, res) => {
+  await dbConnect();
+  res.send("hello");
 });
 
-app.get("/hy", (req, res) => {
-  res.send("hello world hy route");
+app.get("/hy", async (req, res) => {
+  // await dbConnect();
+  const r = await getToDo();
+  // res.send("hello world hy route");
+  console.log(r);
+  res.json(r);
 });
 
 if (process.env.ENV === "dev") {
