@@ -4,7 +4,14 @@ async function getToDo() {
   await dbConnect();
   try {
     const db = client.db("User");
-    const todo = await db.collection("todo").findOne();
+    const todo = db
+      .collection("todo")
+      .find({})
+      .toArray(() => {
+        if (err) throw err;
+        console.log(result);
+        client.close();
+      });
     return todo;
     // console.log(todo);
   } catch (err) {
