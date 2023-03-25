@@ -1,12 +1,14 @@
 const express = require("express");
 const { dbConnect } = require("./db/db-mongo");
 const app = express();
-const { getToDo } = require("./db/services/functions");
+const { getToDo, getToDoOne } = require("./db/services/functions");
 require("dotenv").config();
 
 app.get("/", async (req, res) => {
-  await dbConnect();
-  res.send("hello");
+  const r = await getToDoOne();
+  // res.send("hello world hy route");
+  console.log(r);
+  res.json(r);
 });
 
 app.get("/hy", async (req, res) => {

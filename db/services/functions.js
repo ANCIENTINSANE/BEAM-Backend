@@ -19,4 +19,16 @@ async function getToDo() {
   }
 }
 
-module.exports = { getToDo };
+async function getToDoOne() {
+  await dbConnect();
+  try {
+    const db = client.db("User");
+    const todo = db.collection("todo").findOne();
+    return todo;
+    // console.log(todo);
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+module.exports = { getToDo, getToDoOne };
