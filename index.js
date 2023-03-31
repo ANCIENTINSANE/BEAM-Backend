@@ -10,7 +10,11 @@ const {
   postToDo,
 } = require("./db/services/todoFunctions");
 
-const { getUser, generateToken } = require("./db/services/user");
+const {
+  getUserStudent,
+  getUserTeacher,
+  generateToken,
+} = require("./db/services/user");
 require("dotenv").config();
 
 app.use(bodyParser.json());
@@ -29,20 +33,24 @@ app.get("/gettodo", async (req, res) => {
   res.json(r);
 });
 
-app.post("/login", async (req, res) => {
+app.post("/login/:usertype", async (req, res) => {
+  const userType = req.params["usertype"];
+  const isStudent = usertype == "student";
   const userpass = req.body.password;
   const userid = await req.body.userid;
   console.log(userid);
-  const r = await getUser(userid);
+  const r = isStudent
+    ? await getUserStudent(userid)
+    : await getUserTeacher(userid);
   console.log(r.length);
   if (r.length == 0) {
-    res.json({ status: false, message: "No User",token:"" });
+    res.json({ status: false, message: "No User", token: "" });
   } else {
     var dbpasss = r[0].password;
     if (userpass == dbpasss) {
       var tokenData = { _id: r[0]._id, userid: r[0].userid };
       const token = await generateToken(tokenData, "IDGAF", "1h");
-      res.json({ status: true, token: token,message:"Auth Success" });
+      res.json({ status: true, token: token, message: "Auth Success" });
     }
     if (userpass != dbpasss) {
       res.json({ status: false, message: "Wrong Password", token: "" });
