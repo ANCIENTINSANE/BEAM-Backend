@@ -35,7 +35,8 @@ app.get("/gettodo", async (req, res) => {
 
 app.post("/login/:usertype", async (req, res) => {
   const userType = req.params["usertype"];
-  const isStudent = usertype == "student";
+  console.log(userType);
+  const isStudent = userType == "student";
   const userpass = req.body.password;
   const userid = await req.body.userid;
   console.log(userid);
