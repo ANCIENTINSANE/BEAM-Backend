@@ -45,7 +45,11 @@ app.post("/login/:usertype", async (req, res) => {
     : await getUserTeacher(userid);
   console.log(r.length);
   if (r.length == 0) {
-    res.json({ status: false, message: "No User", token: "" });
+    res.json({
+      status: false,
+      message: "Inavlid UserID / Login-Type",
+      token: "",
+    });
   } else {
     var dbpasss = r[0].password;
     if (userpass == dbpasss) {
