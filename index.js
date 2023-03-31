@@ -36,16 +36,16 @@ app.post("/login", async (req, res) => {
   const r = await getUser(userid);
   console.log(r.length);
   if (r.length == 0) {
-    res.json({ status: false, message: "No User" });
+    res.json({ status: false, message: "No User",token:"" });
   } else {
     var dbpasss = r[0].password;
     if (userpass == dbpasss) {
       var tokenData = { _id: r[0]._id, userid: r[0].userid };
       const token = await generateToken(tokenData, "IDGAF", "1h");
-      res.json({ status: true, token: token });
+      res.json({ status: true, token: token,message:"Auth Success" });
     }
     if (userpass != dbpasss) {
-      res.json({ status: false, message: "Wrong Password" });
+      res.json({ status: false, message: "Wrong Password", token: "" });
     }
   }
 });
