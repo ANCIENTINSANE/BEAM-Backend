@@ -15,6 +15,9 @@ const {
   getUserTeacher,
   generateToken,
 } = require("./db/services/user");
+
+const { getNotificationsGv } = require("./scraping/notifications");
+
 require("dotenv").config();
 
 app.use(bodyParser.json());
@@ -66,6 +69,14 @@ app.post("/login/:usertype", async (req, res) => {
 app.post("/posttodo", async (req, res) => {
   const r = await postToDo(JSON.stringify(req.body));
   res.send(r);
+});
+
+app.get("/getnotificationsgv/:page", async (req, res) => {
+  const pageid = String(req.params["page"]);
+  const notifications = await getNotificationsGv(pageid);
+  console.log(pageid);
+  console.log(notifications);
+  res.json(notifications);
 });
 
 if (process.env.ENV === "dev") {
