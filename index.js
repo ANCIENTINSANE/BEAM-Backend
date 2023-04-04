@@ -16,7 +16,10 @@ const {
   generateToken,
 } = require("./db/services/user");
 
-const { getNotificationsGv } = require("./scraping/notifications");
+const {
+  getNotificationsGv,
+  getNotificationsK,
+} = require("./scraping/notifications");
 
 require("dotenv").config();
 
@@ -74,6 +77,13 @@ app.post("/posttodo", async (req, res) => {
 app.get("/getnotificationsgv/:page", async (req, res) => {
   const pageid = String(req.params["page"]);
   const notifications = await getNotificationsGv(pageid);
+  console.log(pageid);
+  console.log(notifications);
+  res.json(notifications);
+});
+app.get("/getnotificationsk/:page", async (req, res) => {
+  const pageid = String(req.params["page"]);
+  const notifications = await getNotificationsK(pageid);
   console.log(pageid);
   console.log(notifications);
   res.json(notifications);
