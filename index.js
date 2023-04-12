@@ -59,7 +59,7 @@ app.post("/login/:usertype", async (req, res) => {
   } else {
     var dbpasss = r[0].password;
     if (userpass == dbpasss) {
-      var tokenData = { _id: r[0]._id, userid: r[0].userid };
+      var tokenData = { _id: r[0]._id, userid: r[0].userid, name: r[0].name };
       const token = await generateToken(tokenData, "IDGAF", "1h");
       res.json({ status: true, token: token, message: "Auth Success" });
     }
