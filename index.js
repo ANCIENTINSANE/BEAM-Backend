@@ -2,9 +2,9 @@ require("dotenv").config();
 const express = require("express");
 const dbConnect = require("./db/db.connection");
 
-const todoRoutes = require("./routes/todo.router");
-const userRoutes = require("./routes/user.router");
-const notificationRoutes = require("./routes/notification.router");
+const todoRoutes = require("./routers/todo.router");
+const userRoutes = require("./routers/user.router");
+const notificationRoutes = require("./routers/notification.router");
 
 const app = express();
 
