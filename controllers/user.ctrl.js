@@ -35,7 +35,7 @@ const userCtrl = {
 
   // Add User Function
   addUser: asyncHandler(async (req, res) => {
-    const { userid, password, role, name, email } = req.body;
+    const { userid, password, usertype, name, email } = req.body;
 
     // Check if the user already exists
     const existingUser = await User.findOne({ userid });
