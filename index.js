@@ -1,97 +1,27 @@
-var bodyParser = require("body-parser");
-
+require("dotenv").config();
 const express = require("express");
+const dbConnect = require("./db/db.connection");
+
+const todoRoutes = require("./routes/todo.router");
+const userRoutes = require("./routes/user.router");
+const notificationRoutes = require("./routes/notification.router");
 
 const app = express();
 
-const {
-  getToDo,
-  getToDoOne,
-  postToDo,
-} = require("./db/services/todoFunctions");
+// Middleware
+app.use(express.json());
 
-const {
-  getUserStudent,
-  getUserTeacher,
-  generateToken,
-} = require("./db/services/user");
+// Database Connection
+dbConnect();
 
-const {
-  getNotificationsGv,
-  getNotificationsK,
-} = require("./scraping/notifications");
+// Routes
+app.use("/api/todos", todoRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/notifications", notificationRoutes);
 
-require("dotenv").config();
+// Root Route
+app.get("/", (req, res) => res.send("BEAM-BACKEND"));
 
-app.use(bodyParser.json());
-
-app.get("/", async (req, res) => {
-  res.send("BEAM-BACKEND");
-});
-
-app.get("/gettodoone", async (req, res) => {
-  const r = await getToDoOne();
-  res.json(r);
-});
-
-app.get("/gettodo", async (req, res) => {
-  const r = await getToDo();
-  res.json(r);
-});
-
-app.post("/login/:usertype", async (req, res) => {
-  const userType = req.params["usertype"];
-  console.log(userType);
-  const isStudent = userType == "student";
-  const userpass = req.body.password;
-  const userid = await req.body.userid;
-  console.log(userid);
-  const r = isStudent
-    ? await getUserStudent(userid)
-    : await getUserTeacher(userid);
-  console.log(r.length);
-  if (r.length == 0) {
-    res.json({
-      status: false,
-      message: "Inavlid UserID / Login-Type",
-      token: "",
-    });
-  } else {
-    var dbpasss = r[0].password;
-    if (userpass == dbpasss) {
-      var tokenData = { _id: r[0]._id, userid: r[0].userid, name: r[0].name };
-      const token = await generateToken(tokenData, "IDGAF", "1h");
-      res.json({ status: true, token: token, message: "Auth Success" });
-    }
-    if (userpass != dbpasss) {
-      res.json({ status: false, message: "Wrong Password", token: "" });
-    }
-  }
-});
-
-app.post("/posttodo", async (req, res) => {
-  const r = await postToDo(JSON.stringify(req.body));
-  res.send(r);
-});
-
-app.get("/getnotificationsgv/:page", async (req, res) => {
-  const pageid = String(req.params["page"]);
-  const notifications = await getNotificationsGv(pageid);
-  console.log(pageid);
-  console.log(notifications);
-  res.json(notifications);
-});
-app.get("/getnotificationsk/:page", async (req, res) => {
-  const pageid = String(req.params["page"]);
-  const notifications = await getNotificationsK(pageid);
-  console.log(pageid);
-  console.log(notifications);
-  res.json(notifications);
-});
-
-if (process.env.ENV === "dev") {
-  app.listen(10000, () => {
-    console.log("http://localhost:10000");
-  });
-}
-module.exports = app;
+// Start Server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
